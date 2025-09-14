@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Billing System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      max-width: 850px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    h1, h2, h5 { text-align: center; }
+
+    .bill-info, .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+
+    input, select, button {
+      padding: 8px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Print copy adjustments */
+    @media print {
+      .controls, .bill-info, th:last-child, td:last-child { display: none !important; }
+
+      body {
+        font-size: 10px;
+      }
+
+      table th, table td {
+        padding: 3px;
+        font-size: 10px;
+      }
+
+      h3 { font-size: 14px; }
+      h5 { font-size: 10px; }
+      h6 { font-size: 9px; }
+      .total {
+        font-size: 12px;
+        margin-top: 5px;
+      }
+
+      @page {
+        margin: 5mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div style="text-align: center;">
+      <h6>ஸ்ரீ பூசரம்மன் துணை, ஸ்ரீ முருகன் துணை</h6>
+      <h3>T. பாலமுருகன் சமையல் பாத்திரம் & சேர் டேபிள் வாடகைக்கு</h3>
+      <h5>உரிமையாளர்: K.தங்கராஜ், துலுக்கப்பட்டி. செல்:9786769430</h5>
+    </div>
+
+    <!-- Customer Name Input -->
+    <div class="bill-info">
+      <input type="text" id="customerName" placeholder="Customer Name">
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <select id="product">
+        <option value="">-- Select Product --</option>
+        <option value="தேக்சா" data-price="50">தேக்சா</option>
+        <option value="மூடி" data-price="0">மூடி</option>
+        <option value="வாலி" data-price="15">வாலி</option>
+        <option value="கரண்டி" data-price="0">கரண்டி</option>
+        <option value="குண்டா சட்டி" data-price="15">குண்டா சட்டி</option>
+        <option value="அண்ணக்கரண்டி" data-price="0">அண்ணக்கரண்டி</option>
+        <option value="வால் காப்பு" data-price="10">வால் காப்பு</option>
+        <option value="கை கப்பு" data-price="10">கை கப்பு</option>
+        <option value="அறுவாமனை" data-price="10">அறுவாமனை</option>
+        <option value="தேங்காய் திருகி" data-price="10">தேங்காய் திருகி</option>
+        <option value="குதிப்பி" data-price="10">குதிப்பி</option>
+        <option value="ஈயக்கரண்டி" data-price="10">ஈயக்கரண்டி</option>
+        <option value="அகப்ப" data-price="10">அகப்ப</option>
+        <option value="கேத்தல்" data-price="15">கேத்தல்</option>
+        <option value="வடசட்டி (சிறுசு)" data-price="30">வடசட்டி (சிறுசு)</option>
+        <option value="வடசட்டி (பெருசு)" data-price="50">வடசட்டி (பெருசு)</option>
+        <option value="அரிகரண்டி" data-price="0">அரிகரண்டி</option>
+        <option value="இட்லி சட்டி (சிறுசு)" data-price="150">இட்லி சட்டி (சிறுசு)</option>
+        <option value="இட்லி சட்டி (பெருசு)" data-price="300">இட்லி சட்டி (பெருசு)</option>
+        <option value="பேசன்" data-price="15">பேசன்</option>
+        <option value="கிண்ணம்" data-price="0">கிண்ணம்</option>
+        <option value="அடுப்பு(single)" data-price="150">அடுப்பு(single)</option>
+        <option value="அடுப்பு(double)" data-price="300">அடுப்பு(double)</option>
+        <option value="பேரல்" data-price="30">பேரல்</option>
+        <option value="சேர்" data-price="05">சேர்</option>
+        <option value="டேபிள்" data-price="30">டேபிள்</option>
+        <option value="Fan" data-price="300">Fan</option>
+        <option value="டீ கேன்" data-price="100">டீ கேன்</option>
+      </select>
+      <input type="number" id="quantity" placeholder="Qty" min="1">
+      <input type="number" id="manualPrice" placeholder="Price (optional)">
+      <button onclick="addItem()">Add</button>
+      <button onclick="addFutureItem()">Add to Come</button>
+      <button onclick="clearBill()">Clear</button>
+      <button onclick="saveAndPrint()">Print</button>
+    </div>
+
+    <!-- Discount & Payment -->
+    <div class="controls">
+      <input type="number" id="discount" placeholder="Discount">
+      <input type="number" id="paidAmount" placeholder="Paid Amount">
+      <button onclick="applyAdjustments()">Apply</button>
+    </div>
+
+    <!-- Header row -->
+    <div class="header-row">
+      <div><span id="printCustomerName"></span></div>
+      <div><span id="dateTime"></span></div>
+    </div>
+
+    <!-- Bill Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price (₹)</th>
+          <th>Total (₹)</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody id="billBody"></tbody>
+    </table>
+
+    <div class="total" id="discountRow"></div>
+    <div class="total" id="total">Total: ₹0</div>
+    <div class="total" id="paidRow"></div>
+    <div class="total" id="balanceRow"></div>
+
+    <!-- Items To Come -->
+    <div id="futureSection" style="display:none;">
+      <h4>வரவிருக்கும் பொருட்கள்</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody id="futureBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let bill = [];
+    let futureItems = [];
+    let discount = 0;
+    let paidAmount = 0;
+
+    function updateDateTime() {
+      const now = new Date();
+      document.getElementById("dateTime").textContent =
+        now.toLocaleString("ta-IN", { dateStyle: "short", timeStyle: "short" });
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    function addItem() {
+      const productSelect = document.getElementById("product");
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const manualPrice = parseInt(document.getElementById("manualPrice").value);
+      const product = productSelect.value;
+      const defaultPrice = parseInt(productSelect.options[productSelect.selectedIndex]?.dataset.price || 0);
+      const price = manualPrice || defaultPrice;
+
+      if (!product || quantity <= 0) return;
+
+      bill.push({ product, quantity, price, total: price * quantity });
+      renderBill();
+      resetInputs();
+    }
+
+    function addFutureItem() {
+      const product = document.getElementById("product").value;
+      const quantity = parseInt(document.getElementById("quantity").value);
+
+      if (!product || quantity <= 0) return;
+
+      futureItems.push({ product, quantity });
+      renderFuture();
+      resetInputs();
+    }
+
+    function renderBill() {
+      const billBody = document.getElementById("billBody");
+      billBody.innerHTML = "";
+      let total = 0;
+
+      bill.forEach((item, index) => {
+        total += item.total;
+        billBody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.product}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price}</td>
+            <td>${item.total}</td>
+            <td><button onclick="removeItem(${index})">X</button></td>
+          </tr>`;
+      });
+
+      let discountedTotal = total - discount;
+      if (discountedTotal < 0) discountedTotal = 0;
+
+      document.getElementById("discountRow").textContent = discount > 0 ? "Discount: ₹" + discount : "";
+      document.getElementById("total").textContent = "Total: ₹" + discountedTotal;
+
+      // Payment & Balance
+      if (paidAmount > 0) {
+        document.getElementById("paidRow").textContent = "Paid: ₹" + paidAmount;
+        let balance = paidAmount - discountedTotal;
+        document.getElementById("balanceRow").textContent = "Balance: ₹" + balance;
+      } else {
+        document.getElementById("paidRow").textContent = "";
+        document.getElementById("balanceRow").textContent = "";
+      }
+    }
+
+    function renderFuture() {
+      const futureSection = document.getElementById("futureSection");
+      const futureBody = document.getElementById("futureBody");
+      futureBody.innerHTML = "";
+
+      if (futureItems.length > 0) {
+        futureSection.style.display = "block";
+        futureItems.forEach((item, index) => {
+          futureBody.innerHTML += `
+            <tr>
+              <td>${item.product}</td>
+              <td>${item.quantity}</td>
+              <td><button onclick="removeFuture(${index})">X</button></td>
+            </tr>`;
+        });
+      } else {
+        futureSection.style.display = "none";
+      }
+    }
+
+    function removeItem(i) { bill.splice(i, 1); renderBill(); }
+    function removeFuture(i) { futureItems.splice(i, 1); renderFuture(); }
+    function clearBill() { bill = []; futureItems = []; discount = 0; paidAmount = 0; renderBill(); renderFuture(); }
+
+    function applyAdjustments() {
+      discount = parseInt(document.getElementById("discount").value) || 0;
+      paidAmount = parseInt(document.getElementById("paidAmount").value) || 0;
+      renderBill();
+    }
+
+    function resetInputs() {
+      document.getElementById("product").value = "";
+      document.getElementById("quantity").value = "";
+      document.getElementById("manualPrice").value = "";
+    }
+
+    function saveAndPrint() {
+      const customerName = document.getElementById("customerName").value;
+      document.getElementById("printCustomerName").textContent = "Customer: " + customerName;
+
+      if (futureItems.length === 0) {
+        document.getElementById("futureSection").style.display = "none";
+      }
+
+      window.print();
+    }
+  </script>
+</body>
+</html>
